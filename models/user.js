@@ -1,6 +1,9 @@
 
+const mongoose = require('mongoose');
 const { Schema, model } = require('mongoose');
 
+
+//esto es un objeto y defino cómo quiero que luzca el nombre.
 const UserSchema = Schema({
     name: {
         type: String,
@@ -18,7 +21,8 @@ const UserSchema = Schema({
     img: {
         type: String,
     },
-    rol: {
+    //el  va a validar que tiene que ser ese o el otro. admin_role o user_role.
+    role: {
         type: String,
         required: true,
         enum: ['ADMIN_ROLE', 'USER_ROLE']
@@ -36,8 +40,9 @@ const UserSchema = Schema({
 
 
 UserSchema.methods.toJSON = function() {
-    const { __v, password, ...user  } = this.toObject();
+    const { __v, password, _id, ...user  } = this.toObject();
+    user.uid = _id;
     return user;
 }
-
+//cambio id por iud.
 module.exports = model( 'User', UserSchema );

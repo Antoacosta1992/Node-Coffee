@@ -1,13 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-const { dbConnection } = require('../database/config');
+
+const { dbConnection } = require('../database/config.js');
+const { routesUser } = require ('../routes/users.js');
+const { reutesAuth } = require('../routes/auth.js')
 
 class Server {
 
     constructor() {
         this.app  = express();
         this.port = process.env.PORT;
-        this.usersPath = '/api/users';
+
+        this.usersPath  = '/api/users';
+        this.authPath   = '/api/auth';
+
 
         //Conectar a la base de datos
         this.conectarDB();
@@ -20,14 +26,13 @@ class Server {
 
         
     }
-
+     //creamos un metodo sincronico para la llamab dbconnection.
     async conectarDB() {
         await dbConnection();
     }
  
     middlewares() {
         
-
         // CORS
         this.app.use( cors() );
 
@@ -39,12 +44,14 @@ class Server {
     }
 
         
-
-routes() {
+    //Acá se llama a la ruta constructor y los callbacks del routes.
+    routes() {
+    this.app.use( this.authPath, require('../routes/auth'));
     this.app.use( this.usersPath, require('../routes/users'));
+
 }
 
-listen() {
+    listen() {
     this.app.listen( this.port, () => {
         console.log('Server running on port', this.port );
     });

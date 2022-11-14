@@ -11,7 +11,7 @@ const validateFields = ( req, res, next ) => {
     next();
 }
 
-
+//los middlewares se ejecuntan uno después del otro.
 
 module.exports = {
     validateFields
