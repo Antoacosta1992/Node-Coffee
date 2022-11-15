@@ -1,8 +1,19 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const {validateFields} = require('../middlewares/validate-fields');
-const { validarJWT } = require('../middlewares/validate-jwt');
+//const {validateFields} = require('../middlewares/validate-fields');
+//const { validarJWT } = require('../middlewares/validate-jwt');
+//const {isAdminRole, haveRole} = require('../middlewares/validate-roles');
+
+//Un Mdw para validar campos, otro para validar el token, otro para verificar si es rol admin u otro para validar
+//si tiene un rol en especifico.
+const {
+    validateFields, 
+    validarJWT, 
+    isAdminRole, 
+    haveRole
+} = require('../middlewares');
+
 
 const { isRoleValid, emailExists, existsUserForId } = require('../helpers/db-validators');
 
@@ -43,6 +54,9 @@ routes.post('/',[
 
 routes.delete('/:id',[
     validarJWT,
+    //isAdminRole,
+    //ESTE isAdminRole fuerza a que el usuario sea administrador.
+    haveRole('USER_ROLE', 'OTHER_ROLE'),
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom( existsUserForId ),
 validateFields
