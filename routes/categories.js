@@ -1,38 +1,56 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validateFields } = require('../middlewares/validate-fields');
+const { validarJWT, validateFields, isAdminRole } = require('../middlewares');
 
+const { createCategory,
+        getCategories,
+        getCategory,
+        updateCategory, 
+        deleteCategory } = require('../controllers/categories');
 
-const routes = Router();
+const { existCategoryForId } = require('../helpers/db-validators');
+
+const router = Router();
+
 /**
- * {{localhost:8081}}/api/categories
+ * {{url}}/api/categories
  */
 
-//Obtener todas las categories = public.
-routes.get('/', (req, res)=>{
-    res.json('get');
-});
+//  Obtener todas las categorias - publico
+router.get('/', getCategories );
 
-//Obtener una categoría en particular por ID.
-routes.get('/:id', (req, res)=>{
-    res.json('get - id');
-});
+// Obtener una categoria por id - publico
+router.get('/:id',[
+    check('id', 'It is not a valid Mongo ID').isMongoId(),
+    check('id').custom( existCategoryForId ),
+    validateFields,
+], getCategory );
 
-//Se va a a encargar de CREAR una nueva categoría.(privado, cualquier persona con token válido)
-routes.post('/', (req, res)=>{
-    res.json('post');
-});
+// Crear categoria - privado - cualquier persona con un token válido
+router.post('/', [ 
+    validarJWT,
+    check('name','The name in required').not().isEmpty(),
+    validateFields
+], createCategory );
 
-//Para ACTUALIZAR (privado, cualquier persona con token válido)
-routes.put('/:id', (req, res)=>{
-    res.json('put');
-});
+// Actualizar - privado - cualquiera con token válido
+router.put('/:id',[
+    validarJWT,
+    check('name','The name in required').not().isEmpty(),
+    check('id').custom( existCategoryForId ),
+    validateFields
+], updateCategory );
 
-//Delete categorie, sólo si es un ADMIN
-routes.delete('/:id', (req, res)=>{
-    res.json('delete');
-});
+// Borrar una categoria - Admin
+router.delete('/:id',[
+    validarJWT,
+    isAdminRole,
+    check('id', 'It is not a valid Mongo ID.').isMongoId(),
+    check('id').custom( existCategoryForId ),
+    validateFields,
+],deleteCategory);
 
 
-module.exports = routes;
+
+module.exports = router;

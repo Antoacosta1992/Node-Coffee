@@ -36,17 +36,17 @@ routes.get('/', usersGet );
 //middlewares []
 
 routes.put('/:id',[
-    check('id', 'No es un ID válido').isMongoId(),
+    check('id', 'It is not a valid ID').isMongoId(),
     check('id').custom( existsUserForId ),
     check('role').custom( isRoleValid ),
     validateFields
     ],usersPut ); //función que voy a llamar cuando tome esta ruta. 
 
 routes.post('/',[ 
-    check('name', 'El nombre es obligatorio').not().isEmpty(),
+    check('name', 'The name in required').not().isEmpty(),
     check('password', 'El password debe de ser más de 6 letras').isLength({ min: 6 }),
-    check('email', 'El correo no es válido').isEmail(),
-    check ('role','No es un rol valido').isIn(['ADMIN_ROLE','USER_ROLE']),
+    check('email', 'the email is not válid').isEmail(),
+    check ('role','Is not a role valid').isIn(['ADMIN_ROLE','USER_ROLE']),
     check('email').custom( emailExists ),
     check('role').custom( isRoleValid ),
     validateFields ],usersPost); 
@@ -57,7 +57,7 @@ routes.delete('/:id',[
     //isAdminRole,
     //ESTE isAdminRole fuerza a que el usuario sea administrador.
     haveRole('USER_ROLE', 'OTHER_ROLE'),
-    check('id', 'No es un ID válido').isMongoId(),
+    check('id', 'It is not a valid ID').isMongoId(),
     check('id').custom( existsUserForId ),
 validateFields
 ],usersDelete);

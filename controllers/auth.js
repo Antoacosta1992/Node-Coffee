@@ -69,7 +69,6 @@ const googleSignIn = async (req, res=response ) => {
 				name,
 				email,
 				img : picture,
-				role: "USER_ROLE",
 				password: ":P",
 				google: true
 			}
@@ -98,7 +97,6 @@ const googleSignIn = async (req, res=response ) => {
         console.log(error);
 
        res.status(400).json({
-            ok: false,
             msg: 'The token could not be verified'
         })
     }
