@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 
 const { dbConnection } = require('../database/config.js');
-const { routesUser } = require ('../routes/users.js');
-const { reutesAuth } = require('../routes/auth.js')
 
 class Server {
 
@@ -13,6 +11,7 @@ class Server {
 
         this.paths = {
             auth:          '/api/auth',
+            search:        '/api/search',
             categories:    '/api/categories',
             products:      '/api/products', 
             users:         'api/users',
@@ -51,6 +50,7 @@ class Server {
     //Acá se llama a la ruta constructor y los callbacks del routes.
     routes() {
     this.app.use( this.paths.auth, require('../routes/auth'));
+    this.app.use (this.paths.search, require('../routes/search'));
     this.app.use( this.paths.categories, require('../routes/categories'));
     this.app.use( this.paths.products, require ('../routes/products'));
     this.app.use( this.paths.users, require('../routes/users'));

@@ -40,7 +40,7 @@ routes.post('/', [
 // Actualizar - privado - cualquiera con token válido
 routes.put('/:id',[
     validarJWT,
-    check('categoria','No es un id de Mongo').isMongoId(),
+    check('category','No es un id de Mongo').isMongoId(),
     check('id').custom( existProductForId ),
     validateFields
 ], updateProduct );

@@ -45,7 +45,7 @@ const existsUserForId = async( id ) => {
  const existProductForId = async( id ) => {
 
     // Verificar si el correo existe
-    const existProduct = await Producto.findById(id);
+    const existProduct = await Product.findById(id);
     if ( !existProduct ) {
         throw new Error(`ID not exist ${ id }`);
     }

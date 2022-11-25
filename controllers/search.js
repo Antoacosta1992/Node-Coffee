@@ -3,6 +3,7 @@ const { ObjectId } = require('mongoose').Types;
 
 const { User, Category, Product } = require('../models');
 
+//añado todas las colecciones válidas
 const collectionsPermission = [
     'users',
     'categories',
@@ -18,19 +19,20 @@ const searchUsers = async( termino = '', res = response ) => {
         const user = await User.findById(termino);
         return res.json({
             results: ( user ) ? [ user ] : []
+            // si el usuario existe voy a retornar el arreglo con el usuario, caso contrario
+            //voy a regresar un usuario vacio [].
         });
     }
-
+      //expresion regular, la mandamos en vez del termino.
     const regex = new RegExp( termino, 'i' );
     const users = await User.find({
-        $or: [{ name: regex }, { email: regex }],
-        $and: [{ status: true }]
+        $or: [{ name: regex }, { email: regex }], //el nombre y el email conincida con esa expresion.
+        $and: [{ status: true }] //para que en  la busqueda aparezca solo los que no han sido borrados.
     });
 
     res.json({
         results: users
     });
-
 }
 
 const searchCategories = async( termino = '', res = response ) => {
@@ -38,7 +40,7 @@ const searchCategories = async( termino = '', res = response ) => {
     const isMongoID = ObjectId.isValid( termino ); // TRUE 
 
     if ( isMongoID ) {
-        const categoy = await Category.findById(termino);
+        const category = await Category.findById(termino);
         return res.json({
             results: ( category ) ? [ category ] : []
         });
@@ -50,7 +52,6 @@ const searchCategories = async( termino = '', res = response ) => {
     res.json({
         results: categories
     });
-
 }
 
 const searchProducts = async( termino = '', res = response ) => {
@@ -68,7 +69,6 @@ const searchProducts = async( termino = '', res = response ) => {
     const regex = new RegExp( termino, 'i' );
     const products = await Product.find({ name: regex, status: true })
                             .populate('category','name')
-
     res.json({
         results: products
     });
@@ -80,7 +80,7 @@ const search = ( req, res = response ) => {
     
     const { collection, termino  } = req.params;
 
-    if ( !collectionsPermission.includes( colletion ) ) {
+    if ( !collectionsPermission.includes( collection ) ) {
         return res.status(400).json({
             msg: `allowed collections are: ${ collectionsPermission }`
         })
@@ -104,8 +104,6 @@ const search = ( req, res = response ) => {
     }
 
 }
-
-
 
 module.exports = {
     search
