@@ -52,11 +52,23 @@ const existsUserForId = async( id ) => {
 
 }
 
+/**Validar colecciones permitidas*/
+ const allowedCollections = ( collection = '', collections = []) => {
+
+    const incluide= collections.includes( collection );
+    if ( !incluide ) {
+        throw new Error(`The collection ${ collection } is not allowed, ${ collections }`);
+    }
+    return true;
+}
+
 module.exports = {
     isRoleValid,
     emailExists,
     existsUserForId,
     existCategoryForId,
-    existProductForId
+    existProductForId,
+    allowedCollections
+    
 }
 

@@ -1,25 +1,26 @@
- const mongoose = require('mongoose');
+    const mongoose = require('mongoose');
 
 
- const dbConnection = async() => {
-    try{
-
-        await mongoose.connect(process.env.MONGODB_CNN, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-
-        console.log('Online database')
-
-    } catch (error) {
+    const dbConnection =async() => {
+    
+      try {
+    
+         mongoose.connect( process.env.MONGODB_CNN, {
+          useNewUrlParser: true,
+          useUnifiedTopoLogy: true
+        } );
+    
+        console.log('Online Database');
+    
+      } catch (error) {
         console.log(error);
-        throw new Error('Error starting database');
+        throw new Error('Error Database');
+      }
+    
     }
-
- }
-
-
-
- module.exports = {
-    dbConnection
- }
+    
+    module.exports = {
+    
+      dbConnection
+    
+    }
